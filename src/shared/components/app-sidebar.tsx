@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
@@ -9,20 +9,18 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { Network, Building2 } from "lucide-react";
+
+import { NavDocuments } from "@/src/shared/components/nav-documents";
+import { NavMain } from "@/src/shared/components/nav-main";
+import { NavSecondary } from "@/src/shared/components/nav-secondary";
+import { NavUser } from "@/src/shared/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -31,7 +29,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/src/shared/components/ui/sidebar";
+
+import Image from "next/image";
 
 const data = {
   user: {
@@ -46,9 +46,9 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
+      title: "Areas",
       url: "#",
-      icon: IconListDetails,
+      icon: Building2,
     },
     {
       title: "Analytics",
@@ -56,9 +56,9 @@ const data = {
       icon: IconChartBar,
     },
     {
-      title: "Projects",
+      title: "TreeView",
       url: "#",
-      icon: IconFolder,
+      icon: Network,
     },
     {
       title: "Team",
@@ -114,23 +114,7 @@ const data = {
       ],
     },
   ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
+  navSecondary: [],
   documents: [
     {
       name: "Data Library",
@@ -148,7 +132,7 @@ const data = {
       icon: IconFileWord,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -158,11 +142,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <Image
+                  src="/stageconsulting_logo.jpeg"
+                  className="rounded-full"
+                  width={30}
+                  height={30}
+                  alt="Stage Consulting logo"
+                />
+                <span className="text-base font-semibold">Stage Flow</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -177,5 +167,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
