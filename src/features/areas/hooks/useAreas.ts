@@ -5,10 +5,10 @@ import { toast } from "sonner";
 
 export const AREAS_QUERY_KEY = ["areas"];
 
-export function useAreas() {
+export function useAreas(search?: string) {
   return useQuery({
-    queryKey: AREAS_QUERY_KEY,
-    queryFn: areasApi.getAll,
+    queryKey: [...AREAS_QUERY_KEY, search],
+    queryFn: () => areasApi.getAll(search),
   });
 }
 

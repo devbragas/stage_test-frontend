@@ -2,8 +2,10 @@ import { api } from "../../../lib/client";
 import { Area, CreateAreaDto, UpdateAreaDto } from "../types/area";
 
 export const areasApi = {
-  getAll: async () => {
-    const { data } = await api.get<Area[]>("/areas");
+  getAll: async (search?: string) => {
+    const { data } = await api.get("/areas", {
+      params: { search },
+    });
     return data;
   },
 

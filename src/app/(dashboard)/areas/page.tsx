@@ -1,6 +1,13 @@
 "use client";
 
-import { Plus, Building2, Pencil, Trash2, MoreVertical } from "lucide-react";
+import {
+  Plus,
+  Building2,
+  Pencil,
+  Trash2,
+  MoreVertical,
+  Search,
+} from "lucide-react";
 import { Button } from "../../../shared/components/ui/button";
 import {
   Card,
@@ -46,9 +53,9 @@ import {
   CreateAreaFormData,
   UpdateAreaFormData,
 } from "../../../features/areas/lib/validations/area";
+import { Input } from "@/src/shared/components/ui/input";
 
 export default function AreasPage() {
-  const { data: areas, isLoading } = useAreas();
   const createArea = useCreateArea();
   const updateArea = useUpdateArea();
   const deleteArea = useDeleteArea();
@@ -58,6 +65,8 @@ export default function AreasPage() {
     isCreateDialogOpen,
     isEditDialogOpen,
     isDeleteDialogOpen,
+    search,
+    setSearch,
     openCreateDialog,
     closeCreateDialog,
     openEditDialog,
@@ -65,6 +74,7 @@ export default function AreasPage() {
     openDeleteDialog,
     closeDeleteDialog,
   } = useAreaStore();
+  const { data: areas, isLoading } = useAreas(search);
 
   const handleCreate = (data: CreateAreaFormData) => {
     createArea.mutate(data, {
@@ -99,11 +109,21 @@ export default function AreasPage() {
             Gerencie os departamentos e setores da empresa
           </p>
         </div>
-
-        <Button size="lg" onClick={openCreateDialog}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova Área
-        </Button>
+        <div className="flex items-center gap-4.5">
+          <div className="relative max-w-sm">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar área pelo nome..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button size="lg" onClick={openCreateDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Área
+          </Button>
+        </div>
       </div>
 
       {isLoading && (
@@ -225,7 +245,9 @@ export default function AreasPage() {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Tem certeza que deseja apagar essa Área?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita.
             </AlertDialogDescription>
