@@ -17,6 +17,16 @@ import {
   DialogTitle,
 } from "@/src/shared/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/src/shared/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -47,10 +57,13 @@ export default function AreasPage() {
     selectedArea,
     isCreateDialogOpen,
     isEditDialogOpen,
+    isDeleteDialogOpen,
     openCreateDialog,
     closeCreateDialog,
     openEditDialog,
     closeEditDialog,
+    openDeleteDialog,
+    closeDeleteDialog,
   } = useAreaStore();
 
   const handleCreate = (data: CreateAreaFormData) => {
@@ -72,6 +85,14 @@ export default function AreasPage() {
   const handleDelete = (id: string) => {
     if (!confirm("Tem certeza que deseja deletar esta área?")) return;
     deleteArea.mutate(id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!selectedArea) return;
+
+    deleteArea.mutate(selectedArea.id, {
+      onSuccess: () => closeDeleteDialog(),
+    });
   };
 
   return (
@@ -159,7 +180,7 @@ export default function AreasPage() {
                         Editar
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleDelete(area.id)}
+                        onClick={() => openDeleteDialog(area)}
                         className="text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -206,6 +227,27 @@ export default function AreasPage() {
           />
         </DialogContent>
       </Dialog>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={deleteArea.isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteArea.isPending ? "Deletando..." : "Deletar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
