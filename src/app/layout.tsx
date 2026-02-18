@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Rubik } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../shared/components/theme-provider";
+import { QueryProvider } from "../shared/components/query-provider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +35,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <QueryProvider>
+            {children} <Toaster position="top-right" richColors />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

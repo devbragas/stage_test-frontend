@@ -1,0 +1,24 @@
+import { create } from "zustand";
+import { Area } from "../../types/area";
+
+interface AreaStore {
+  selectedArea: Area | null;
+  isCreateDialogOpen: boolean;
+  isEditDialogOpen: boolean;
+  setSelectedArea: (area: Area | null) => void;
+  openCreateDialog: () => void;
+  closeCreateDialog: () => void;
+  openEditDialog: (area: Area) => void;
+  closeEditDialog: () => void;
+}
+
+export const useAreaStore = create<AreaStore>((set) => ({
+  selectedArea: null,
+  isCreateDialogOpen: false,
+  isEditDialogOpen: false,
+  setSelectedArea: (area) => set({ selectedArea: area }),
+  openCreateDialog: () => set({ isCreateDialogOpen: true }),
+  closeCreateDialog: () => set({ isCreateDialogOpen: false }),
+  openEditDialog: (area) => set({ selectedArea: area, isEditDialogOpen: true }),
+  closeEditDialog: () => set({ isEditDialogOpen: false, selectedArea: null }),
+}));

@@ -10,21 +10,15 @@ import {
   IconFileDescription,
   IconFileWord,
   IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
 } from "@tabler/icons-react";
 
-import { Network, Building2 } from "lucide-react";
+import { Network, Building2, ChartLine } from "lucide-react";
 
-import { NavDocuments } from "@/src/shared/components/nav-documents";
 import { NavMain } from "@/src/shared/components/nav-main";
 import { NavSecondary } from "@/src/shared/components/nav-secondary";
-import { NavUser } from "@/src/shared/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -32,38 +26,34 @@ import {
 } from "@/src/shared/components/ui/sidebar";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Areas",
-      url: "#",
+      title: "Áreas",
+      url: "/areas",
       icon: Building2,
     },
     {
-      title: "Analytics",
-      url: "#",
+      title: "Processos",
+      url: "/processos",
       icon: IconChartBar,
     },
     {
       title: "TreeView",
-      url: "#",
+      url: "/treeview",
       icon: Network,
     },
     {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
+      title: "Analytics",
+      url: "/dashboard",
+      icon: ChartLine,
     },
   ],
   navClouds: [
@@ -144,7 +134,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
+              <Link href="/dashboard">
                 <Image
                   src="/stageconsulting_logo.jpeg"
                   className="rounded-full"
@@ -153,19 +143,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   alt="Stage Consulting logo"
                 />
                 <span className="text-base font-semibold">Stage Flow</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
     </Sidebar>
   );
 }
