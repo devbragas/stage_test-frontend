@@ -82,11 +82,6 @@ export default function AreasPage() {
     );
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm("Tem certeza que deseja deletar esta área?")) return;
-    deleteArea.mutate(id);
-  };
-
   const handleConfirmDelete = () => {
     if (!selectedArea) return;
 

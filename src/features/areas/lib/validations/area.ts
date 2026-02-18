@@ -5,7 +5,10 @@ export const createAreaSchema = z.object({
     .string()
     .min(3, "Nome deve ter pelo menos 3 caracteres")
     .max(100, "Nome muito longo"),
-  description: z.string().max(500, "Descrição muito longa").optional(),
+  description: z
+    .string()
+    .min(1, "É necessário colocar uma descrição da Área")
+    .max(500, "Descrição muito longa"),
   color: z
     .string()
     .regex(/^#[0-9A-F]{6}$/i, "Cor inválida")

@@ -27,6 +27,7 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
+import { ModeToggle } from "./mode-toggle";
 
 const data = {
   navMain: [
@@ -129,12 +130,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
-              <Link href="/dashboard">
+          <SidebarMenuItem className="flex justify-between items-center">
+            <div>
+              <div className="flex gap-2 items-center">
                 <Image
                   src="/stageconsulting_logo.jpeg"
                   className="rounded-full"
@@ -143,8 +141,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   alt="Stage Consulting logo"
                 />
                 <span className="text-base font-semibold">Stage Flow</span>
-              </Link>
-            </SidebarMenuButton>
+              </div>
+            </div>
+            <ModeToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
