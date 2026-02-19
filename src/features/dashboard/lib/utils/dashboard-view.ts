@@ -50,7 +50,7 @@ export function buildPriorityRiskData(
   mediumRiskProcesses: number,
   lowRiskProcesses: number,
 ): PriorityRiskDatum[] {
-  return [
+  const data: PriorityRiskDatum[] = [
     {
       priorityKey: "critica",
       nivel: "Crítico",
@@ -75,7 +75,9 @@ export function buildPriorityRiskData(
       processos: lowRiskProcesses,
       fill: "var(--color-baixa)",
     },
-  ].sort((a, b) => {
+  ];
+
+  return data.sort((a, b) => {
     if (b.processos !== a.processos) {
       return b.processos - a.processos;
     }

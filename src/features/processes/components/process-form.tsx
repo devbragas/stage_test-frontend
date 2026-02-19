@@ -29,7 +29,7 @@ import {
   UpdateProcessFormData,
   updateProcessSchema,
 } from "../lib/validations/process";
-import { Process } from "../types/process";
+import type { Process } from "../types";
 import type { Area } from "@/src/features/areas";
 
 interface ProcessFormProps {

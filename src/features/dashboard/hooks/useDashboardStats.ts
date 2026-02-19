@@ -1,13 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/src/lib/client";
-import { areasApi } from "@/src/features/areas";
+import { areasApi } from "@/src/features/areas/lib/areas";
 import { processesApi } from "@/src/features/processes/lib/api/processes";
-import type { Process } from "@/src/features/processes/types/process";
-import type { Area } from "@/src/features/areas";
-import type {
-  DashboardProcessStatsResponse,
-  DashboardStats,
-} from "@/src/features/dashboard/types";
+import { Process } from "@/src/features/processes/types/process";
+import { Area } from "@/src/features/areas/types/area";
+
+export interface DashboardProcessStatsResponse {
+  totalProcesses: number;
+  activeProcesses: number;
+  manualProcesses: number;
+  systemicProcesses: number;
+}
+
+export interface DashboardStats extends DashboardProcessStatsResponse {
+  totalAreas: number;
+  criticalProcesses: number;
+  highRiskProcesses: number;
+  mediumRiskProcesses: number;
+  lowRiskProcesses: number;
+  operationalRiskPercentage: number;
+}
 
 const DASHBOARD_STATS_QUERY_KEY = ["dashboard", "stats"];
 
@@ -40,7 +52,6 @@ function calculateStatsFromProcesses(
   const systemicProcesses = processes.filter(
     (process) => process.type === "SISTEMIC",
   ).length;
-  // Accept both legacy and current status values while backend is being stabilized.
   const activeProcesses = processes.filter((process) => {
     const status = String(process.status);
     return status === "ACTIVE" || status === "ATIVO";

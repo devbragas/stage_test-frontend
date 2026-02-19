@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { processesApi } from "../lib/api/processes";
-import { CreateProcessDto, UpdateProcessDto } from "../types/process";
+import { processesApi } from "../services";
+import type { CreateProcessDto, UpdateProcessDto } from "../types";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 

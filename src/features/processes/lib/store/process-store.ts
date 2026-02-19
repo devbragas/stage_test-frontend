@@ -1,6 +1,6 @@
 // src/features/processes/lib/store/process-store.ts
 import { create } from "zustand";
-import { Process } from "../../types/process";
+import type { Process } from "../../types";
 
 interface ProcessStore {
   selectedProcess: Process | null;

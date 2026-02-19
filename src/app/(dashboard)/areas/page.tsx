@@ -229,7 +229,7 @@ export default function AreasPage() {
       </Dialog>
 
       <Dialog open={isEditDialogOpen} onOpenChange={closeEditDialog}>
-        <DialogContent className="sm:max-w-4xl">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar Área</DialogTitle>
           </DialogHeader>
