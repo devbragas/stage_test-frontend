@@ -46,13 +46,11 @@ import {
   useCreateArea,
   useUpdateArea,
   useDeleteArea,
-} from "../../../features/areas/hooks/useAreas";
-import { useAreaStore } from "../../../features/areas/lib/store/area-store";
-import { AreaForm } from "../../../features/areas/components/area-form";
-import {
+  useAreaStore,
+  AreaForm,
   CreateAreaFormData,
   UpdateAreaFormData,
-} from "../../../features/areas/lib/validations/area";
+} from "@/src/features/areas";
 import { Input } from "@/src/shared/components/ui/input";
 
 export default function AreasPage() {

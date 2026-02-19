@@ -30,7 +30,7 @@ import {
   updateProcessSchema,
 } from "../lib/validations/process";
 import { Process } from "../types/process";
-import { Area } from "@/src/features/areas/types/area";
+import type { Area } from "@/src/features/areas";
 
 interface ProcessFormProps {
   process?: Process;

@@ -18,8 +18,8 @@ import {
   createAreaSchema,
   UpdateAreaFormData,
   updateAreaSchema,
-} from "../../areas/lib/validations/area";
-import { Area } from "../types/area";
+} from "../lib/validations/area";
+import type { Area } from "../types";
 
 interface AreaFormProps {
   area?: Area;

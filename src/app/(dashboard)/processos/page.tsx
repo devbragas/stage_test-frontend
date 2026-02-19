@@ -59,7 +59,7 @@ import {
   useUpdateProcess,
   useDeleteProcess,
 } from "@/src/features/processes/hooks/useProcesses";
-import { useAreas } from "@/src/features/areas/hooks/useAreas";
+import { useAreas } from "@/src/features/areas";
 import { useProcessStore } from "@/src/features/processes/lib/store/process-store";
 import { ProcessForm } from "@/src/features/processes/components/process-form";
 import {

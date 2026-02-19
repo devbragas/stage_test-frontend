@@ -1,5 +1,5 @@
 import { api } from "../../../lib/client";
-import { Area, CreateAreaDto, UpdateAreaDto } from "../types/area";
+import type { Area, CreateAreaDto, UpdateAreaDto } from "../types";
 
 export const areasApi = {
   getAll: async (search?: string) => {

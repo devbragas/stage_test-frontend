@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/src/lib/client";
-import { areasApi } from "@/src/features/areas/lib/areas";
+import { areasApi } from "@/src/features/areas";
 import { processesApi } from "@/src/features/processes/lib/api/processes";
 import type { Process } from "@/src/features/processes/types/process";
-import type { Area } from "@/src/features/areas/types/area";
+import type { Area } from "@/src/features/areas";
 import type {
   DashboardProcessStatsResponse,
   DashboardStats,

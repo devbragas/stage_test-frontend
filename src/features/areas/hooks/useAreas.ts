@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { areasApi } from "../lib/areas";
-import { CreateAreaDto, UpdateAreaDto } from "../../areas/types/area";
+import { areasApi } from "../services";
+import type { CreateAreaDto, UpdateAreaDto } from "../types";
 import { toast } from "sonner";
 
 export const AREAS_QUERY_KEY = ["areas"];
