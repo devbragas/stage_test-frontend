@@ -13,7 +13,7 @@ export const processesApi = {
     skip?: number;
     limit?: number;
   }) => {
-    const cleanParams: Record<string, any> = {};
+    const cleanParams: Record<string, unknown> = {};
 
     if (params?.search?.trim()) {
       cleanParams.search = params.search.trim();
