@@ -23,7 +23,10 @@ import { Area } from "../types/area";
 
 interface AreaFormProps {
   area?: Area;
-  onSubmit: (data: CreateAreaFormData | UpdateAreaFormData) => void;
+  onSubmit: (
+    data: CreateAreaFormData | UpdateAreaFormData,
+    setError: unknown,
+  ) => void;
   loading?: boolean;
 }
 
@@ -39,7 +42,10 @@ export function AreaForm({ area, onSubmit, loading }: AreaFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit((data) => onSubmit(data, form.setError))}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"
