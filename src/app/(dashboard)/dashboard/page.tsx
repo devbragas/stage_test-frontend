@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Building2,
-  CheckCircle2,
-  Hand,
-  TrendingUp,
-  Workflow,
-} from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -18,6 +12,21 @@ import {
 } from "recharts";
 import { useDashboardStats } from "@/src/features/dashboard/hooks/useDashboardStats";
 import {
+  DASHBOARD_STAT_CARDS,
+  priorityRiskChartConfig,
+  processDistributionChartConfig,
+} from "@/src/features/dashboard/lib/constants";
+import {
+  buildPriorityRiskData,
+  buildProcessDistributionData,
+  calculatePercentage,
+  clampPercentage,
+  getDashboardStatValue,
+  getOperationalRiskColor,
+  getOperationalRiskText,
+  getProcessDistributionInsight,
+} from "@/src/features/dashboard/lib/utils";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -27,95 +36,13 @@ import {
 } from "@/src/shared/components/ui/card";
 import { Skeleton } from "@/src/shared/components/ui/skeleton";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/src/shared/components/ui/chart";
 
-type ProcessDistributionDatum = {
-  segment: "manual" | "sistemico";
-  value: number;
-  fill: string;
-};
-
-type PriorityRiskDatum = {
-  priorityKey: "critica" | "alta" | "media" | "baixa";
-  nivel: "Crítico" | "Alto" | "Médio" | "Baixo";
-  processos: number;
-  fill: string;
-};
-
-const riskPriorityOrder: Record<PriorityRiskDatum["priorityKey"], number> = {
-  critica: 0,
-  alta: 1,
-  media: 2,
-  baixa: 3,
-};
-
-const chartConfig = {
-  manual: {
-    label: "Manual",
-    color: "var(--chart-2)",
-  },
-  sistemico: {
-    label: "Sistêmico",
-    color: "var(--chart-3)",
-  },
-} satisfies ChartConfig;
-
-const riskChartConfig = {
-  processos: {
-    label: "Processos",
-  },
-  critica: {
-    label: "Crítico",
-    color: "#ef4444",
-  },
-  alta: {
-    label: "Alto",
-    color: "#f97316",
-  },
-  media: {
-    label: "Médio",
-    color: "#f59e0b",
-  },
-  baixa: {
-    label: "Baixo",
-    color: "#22c55e",
-  },
-} satisfies ChartConfig;
-
-function calculatePercentage(value: number, total: number): number {
-  if (total <= 0) return 0;
-  return Number(((value / total) * 100).toFixed(1));
-}
-
 export default function DashboardPage() {
   const { data, isLoading, isError } = useDashboardStats();
-
-  const stats = [
-    {
-      title: "Total de Processos",
-      value: data?.totalProcesses ?? 0,
-      icon: Workflow,
-    },
-    {
-      title: "Processos Ativos",
-      value: data?.activeProcesses ?? 0,
-      icon: CheckCircle2,
-    },
-    {
-      title: "Processos Manuais",
-      value: data?.manualProcesses ?? 0,
-      icon: Hand,
-    },
-    {
-      title: "Total de Áreas",
-      value: data?.totalAreas ?? 0,
-      icon: Building2,
-    },
-  ];
 
   const totalProcesses = data?.totalProcesses ?? 0;
   const manualProcesses = data?.manualProcesses ?? 0;
@@ -126,73 +53,34 @@ export default function DashboardPage() {
   const lowRiskProcesses = data?.lowRiskProcesses ?? 0;
   const operationalRiskPercentage = data?.operationalRiskPercentage ?? 0;
 
-  const chartData: ProcessDistributionDatum[] = [
-    {
-      segment: "manual",
-      value: manualProcesses,
-      fill: "var(--color-manual)",
-    },
-    {
-      segment: "sistemico",
-      value: systemicProcesses,
-      fill: "var(--color-sistemico)",
-    },
-  ];
-
-  const priorityRiskData: PriorityRiskDatum[] = [
-    {
-      priorityKey: "critica",
-      nivel: "Crítico",
-      processos: criticalProcesses,
-      fill: "var(--color-critica)",
-    },
-    {
-      priorityKey: "alta",
-      nivel: "Alto",
-      processos: highRiskProcesses,
-      fill: "var(--color-alta)",
-    },
-    {
-      priorityKey: "media",
-      nivel: "Médio",
-      processos: mediumRiskProcesses,
-      fill: "var(--color-media)",
-    },
-    {
-      priorityKey: "baixa",
-      nivel: "Baixo",
-      processos: lowRiskProcesses,
-      fill: "var(--color-baixa)",
-    },
-  ].sort((a, b) => {
-    if (b.processos !== a.processos) {
-      return b.processos - a.processos;
-    }
-
-    return riskPriorityOrder[a.priorityKey] - riskPriorityOrder[b.priorityKey];
-  });
+  const chartData = buildProcessDistributionData(
+    manualProcesses,
+    systemicProcesses,
+  );
+  const priorityRiskData = buildPriorityRiskData(
+    criticalProcesses,
+    highRiskProcesses,
+    mediumRiskProcesses,
+    lowRiskProcesses,
+  );
 
   const manualPercentage = calculatePercentage(manualProcesses, totalProcesses);
   const systemicPercentage = calculatePercentage(
     systemicProcesses,
     totalProcesses,
   );
-
-  const insightText =
-    totalProcesses === 0
-      ? "Ainda não há processos cadastrados para análise."
-      : manualPercentage > systemicPercentage
-        ? `${manualPercentage}% dos processos são manuais, indicando oportunidade de automação.`
-        : systemicPercentage > manualPercentage
-          ? `${systemicPercentage}% dos processos já são sistêmicos, refletindo boa maturidade operacional.`
-          : `Manual e sistêmico estão equilibrados em ${manualPercentage}%.`;
-
-  const operationalRiskText =
-    operationalRiskPercentage >= 40
-      ? `${operationalRiskPercentage}% de risco operacional (alto) pela quantidade de processos críticos.`
-      : operationalRiskPercentage >= 20
-        ? `${operationalRiskPercentage}% de risco operacional (moderado) com atenção aos processos críticos.`
-        : `${operationalRiskPercentage}% de risco operacional (controlado) em processos críticos.`;
+  const insightText = getProcessDistributionInsight(
+    totalProcesses,
+    manualPercentage,
+    systemicPercentage,
+  );
+  const operationalRiskText = getOperationalRiskText(operationalRiskPercentage);
+  const clampedOperationalRiskPercentage = clampPercentage(
+    operationalRiskPercentage,
+  );
+  const operationalRiskColor = getOperationalRiskColor(
+    operationalRiskPercentage,
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-8">
@@ -204,7 +92,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
+        {DASHBOARD_STAT_CARDS.map((item) => (
           <Card
             key={item.title}
             className="border-border/60 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
@@ -220,7 +108,7 @@ export default function DashboardPage() {
                 <Skeleton className="h-8 w-20" />
               ) : (
                 <div className="text-2xl font-semibold tracking-tight">
-                  {item.value}
+                  {getDashboardStatValue(data, item.metric)}
                 </div>
               )}
             </CardContent>
@@ -238,7 +126,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="mx-auto h-[220px] w-[220px]" />
+              <Skeleton className="mx-auto h-55 w-55" />
             ) : isError ? (
               <p className="text-sm text-destructive">
                 Não foi possível carregar os dados do dashboard.
@@ -249,8 +137,8 @@ export default function DashboardPage() {
               </p>
             ) : (
               <ChartContainer
-                config={chartConfig}
-                className="mx-auto h-[220px] w-[220px] !aspect-square"
+                config={processDistributionChartConfig}
+                className="mx-auto h-55 w-55 !aspect-square"
               >
                 <PieChart>
                   <ChartTooltip
@@ -306,7 +194,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="h-[260px] w-full" />
+              <Skeleton className="h-65 w-full" />
             ) : isError ? (
               <p className="text-sm text-destructive">
                 Não foi possível carregar os dados de risco.
@@ -317,8 +205,8 @@ export default function DashboardPage() {
               </p>
             ) : (
               <ChartContainer
-                config={riskChartConfig}
-                className="h-[260px] w-full"
+                config={priorityRiskChartConfig}
+                className="h-65 w-full"
               >
                 <BarChart
                   data={priorityRiskData}
@@ -361,15 +249,10 @@ export default function DashboardPage() {
                 </div>
                 <div className="h-2 w-full rounded-full bg-muted">
                   <div
-                    className="h-2 rounded-full bg-red-500 transition-all"
+                    className="h-2 rounded-full transition-all"
                     style={{
-                      width: `${Math.min(operationalRiskPercentage, 100)}%`,
-                      backgroundColor:
-                        operationalRiskPercentage >= 40
-                          ? "#ef4444"
-                          : operationalRiskPercentage >= 20
-                            ? "#f97316"
-                            : "#22c55e",
+                      width: `${clampedOperationalRiskPercentage}%`,
+                      backgroundColor: operationalRiskColor,
                     }}
                   />
                 </div>
