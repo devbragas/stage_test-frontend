@@ -51,11 +51,6 @@ const data = {
       url: "/treeview",
       icon: Network,
     },
-    {
-      title: "Analytics",
-      url: "/dashboard",
-      icon: ChartLine,
-    },
   ],
   navClouds: [
     {

@@ -1,10 +1,10 @@
 import { api } from "@/src/lib/client";
 import {
-  Process,
-  CreateProcessDto,
-  UpdateProcessDto,
-  ProcessesResponse,
-} from "../../types/process";
+  type Process,
+  type CreateProcessDto,
+  type UpdateProcessDto,
+  type ProcessesResponse,
+} from "../../types";
 
 export const processesApi = {
   getAll: async (params?: {

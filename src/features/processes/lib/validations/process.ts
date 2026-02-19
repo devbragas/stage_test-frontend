@@ -7,11 +7,7 @@ const responsibleSchema = z
   .trim()
   .min(1, "Nome do responsável é obrigatório");
 
-const documentationSchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
-  type: z.string().optional(),
-  url: z.string().url("URL inválida").optional().or(z.literal("")),
-});
+const documentationSchema = z.string().trim().url("URL inválida");
 
 export const createProcessSchema = z.object({
   name: z

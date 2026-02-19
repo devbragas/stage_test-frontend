@@ -54,18 +54,18 @@ import { Badge } from "@/src/shared/components/ui/badge";
 import { Skeleton } from "@/src/shared/components/ui/skeleton";
 import { Input } from "@/src/shared/components/ui/input";
 import {
-  useProcesses,
+  ProcessForm,
   useCreateProcess,
-  useUpdateProcess,
   useDeleteProcess,
-} from "@/src/features/processes/hooks/useProcesses";
-import { useAreas } from "@/src/features/areas/hooks/useAreas";
-import { useProcessStore } from "@/src/features/processes/lib/store/process-store";
-import { ProcessForm } from "@/src/features/processes/components/process-form";
-import {
+  useProcessStore,
+  useProcesses,
+  useUpdateProcess,
+} from "@/src/features/processes";
+import type {
   CreateProcessFormData,
   UpdateProcessFormData,
-} from "@/src/features/processes/lib/validations/process";
+} from "@/src/features/processes";
+import { useAreas } from "@/src/features/areas";
 
 const statusColors = {
   ATIVO: "bg-green-100 text-green-800",
