@@ -1,37 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stage Flow – Frontend
 
-## Getting Started
+Frontend do sistema de mapeamento e visualização da cadeia de processos organizacionais.
+Desenvolvido como parte do case técnico da Stage Consulting, utilizando majoritariamente Next.js.
 
-First, run the development server:
+## 1. Objetivo do Projeto
+
+O sistema permite organizar áreas, processos e subprocessos em uma estrutura hierárquica visual, com foco em usabilidade, organização modular e escalabilidade.
+
+## 2. Tecnologias Utilizadas
+
+- Next.js 16
+- React
+- TypeScript
+- React Hook Form
+- Zod
+- TanStack Query
+- Zustand
+- Axios
+- Tailwind CSS
+- shadcn/ui
+
+## 3. Arquitetura
+
+A aplicação segue uma estrutura feature-based (FDD – Feature Driven Design),
+havendo uma clara separação de responsabilidades seguindo um mesmo padrão:
+
+```bash
+src/
+ ├── app/
+ ├── features/
+ │    ├── areas/
+ │    └── processes/
+ ├── shared/
+ │    ├── components/
+ │    ├── hooks/
+ │    └── utils/
+ ├── lib/
+```
+
+Nesse padrão de arquitetura, cada domínio possui sua própria responsabilidade, tendo todo o código centralizado e com fácil manutenibilidade.
+
+## 4. Principais funcionalidades
+
+### Áreas
+
+- CRUD completo
+- Filtro por nome
+- Validação de nome duplicado
+- Feedback visual com toast e Modals
+
+### Processos
+
+- CRUD completo
+- Hierarquia (processo pai / subprocesso)
+- Filtro por Nome e Área
+- Paginação
+- Exibição de Status, Prioridade, Área associada e indicador de subprocesso
+
+- Gestão dinâmica de ferramentas, profissionais e documentações
+
+### UX
+
+- Badges visuais para Status e Prioridades
+- Ícones para diferenciar tipo de processo (Manual / Sistêmico)
+- Feedback de loading com Skeleton Screens
+- Layout responsivo
+
+## 5. Como rodar o projeto
+
+Primeiramente, clone o repositório com o seguinte comando:
+
+```bash
+git clone https://github.com/devbragas/stage_test-frontend/tree/main
+```
+
+Em seguida, instale as dependências requeridas pelo terminal, para que a aplicação funcione bem, utilizando do comando:
+
+```bash
+npm install
+```
+
+Logo após isso, crie um arquivo .env na raíz do seu projeto e cole a seguinte linha:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3333
+```
+
+Por fim, rode a aplicação com o comando:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# stage_test-frontend
+A aplicação estará disponível em: [http://localhost:3000](http://localhost:3000) .
