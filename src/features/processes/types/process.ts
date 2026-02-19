@@ -2,12 +2,6 @@ export type ProcessType = "MANUAL" | "SISTEMIC";
 export type ProcessStatus = "ACTIVE" | "INACTIVE";
 export type ProcessPriority = "BAIXA" | "MEDIA" | "ALTA" | "CRITICA";
 
-export interface Documentation {
-  title: string;
-  type?: string;
-  url?: string;
-}
-
 export interface Process {
   id: string;
   name: string;
@@ -21,7 +15,7 @@ export interface Process {
 
   tools?: string[];
   responsibles?: string[];
-  documentations?: Documentation[];
+  documentations?: string[];
 
   area?: {
     id: string;
@@ -62,7 +56,7 @@ export interface CreateProcessDto {
   parentId?: string;
   tools?: string[];
   responsibles?: string[];
-  documentations?: Documentation[];
+  documentations?: string[];
 }
 
 export type UpdateProcessDto = Partial<CreateProcessDto>;

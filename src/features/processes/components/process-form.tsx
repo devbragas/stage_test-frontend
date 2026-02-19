@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/shared/components/ui/button";
@@ -55,14 +55,7 @@ export function ProcessForm({
   const normalizedPriority = process?.priority || "MEDIA";
 
   const normalizedDocumentations = (process?.documentations || []).map(
-    (documentation) =>
-      typeof documentation === "string"
-        ? { title: documentation, type: "", url: "" }
-        : {
-            title: documentation?.title || "",
-            type: documentation?.type || "",
-            url: documentation?.url || "",
-          },
+    (documentation) => documentation.trim(),
   );
 
   const form = useForm<CreateProcessFormData | UpdateProcessFormData>({
@@ -91,20 +84,14 @@ export function ProcessForm({
 
   const responsibles = form.watch("responsibles") || [];
 
-  const {
-    fields: documentationFields,
-    append: appendDocumentation,
-    remove: removeDocumentation,
-  } = useFieldArray({
-    control: form.control,
-    name: "documentations",
-  });
+  const documentations = form.watch("documentations") || [];
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          const { parentId, responsibles, tools, ...rest } = data;
+          const { parentId, responsibles, tools, documentations, ...rest } =
+            data;
           const formattedResponsibles = (responsibles || [])
             .map((responsible) =>
               typeof responsible === "string" ? responsible.trim() : "",
@@ -113,11 +100,17 @@ export function ProcessForm({
           const formattedTools = (tools || [])
             .map((tool) => (typeof tool === "string" ? tool.trim() : ""))
             .filter(Boolean);
+          const formattedDocumentations = (documentations || [])
+            .map((documentation) =>
+              typeof documentation === "string" ? documentation.trim() : "",
+            )
+            .filter(Boolean);
 
           const formattedData = {
             ...rest,
             tools: formattedTools,
             responsibles: formattedResponsibles,
+            documentations: formattedDocumentations,
             ...(parentId && parentId !== "NONE" ? { parentId } : {}),
           };
 
@@ -155,7 +148,7 @@ export function ProcessForm({
                   <FormControl>
                     <Textarea
                       placeholder="Descreva o processo..."
-                      className="min-h-[100px]"
+                      className="min-h-25"
                       {...field}
                     />
                   </FormControl>
@@ -431,57 +424,34 @@ export function ProcessForm({
                   variant="outline"
                   size="sm"
                   className="w-full sm:w-auto"
-                  onClick={() =>
-                    appendDocumentation({ title: "", type: "", url: "" })
-                  }
+                  onClick={() => {
+                    form.setValue("documentations", [...documentations, ""], {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                  }}
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Adicionar Documento
+                  Adicionar URL
                 </Button>
               </div>
 
-              {documentationFields.length === 0 && (
+              {documentations.length === 0 && (
                 <p className="text-sm text-muted-foreground">
                   Nenhuma documentação adicionada
                 </p>
               )}
 
-              {documentationFields.map((field, index) => (
-                <div key={field.id} className="flex items-start gap-2">
+              {documentations.map((_, index) => (
+                <div key={`documentation-${index}`} className="flex items-start gap-2">
                   <div className="grid min-w-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name={`documentations.${index}.title`}
+                      name={`documentations.${index}`}
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Input placeholder="Título" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`documentations.${index}.type`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input placeholder="Tipo (opcional)" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`documentations.${index}.url`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input placeholder="URL (opcional)" {...field} />
+                            <Input placeholder="URL da documentação" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -493,7 +463,15 @@ export function ProcessForm({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => removeDocumentation(index)}
+                    onClick={() => {
+                      const updated = documentations.filter(
+                        (_, i) => i !== index,
+                      );
+                      form.setValue("documentations", updated, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
