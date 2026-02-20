@@ -8,14 +8,14 @@ export const AREAS_QUERY_KEY = ["areas"];
 export function useAreas(search?: string) {
   return useQuery({
     queryKey: [...AREAS_QUERY_KEY, search],
-    queryFn: () => areasApi.getAll(search),
+    queryFn: ({ signal }) => areasApi.getAll(search, signal),
   });
 }
 
 export function useArea(id: string) {
   return useQuery({
     queryKey: [...AREAS_QUERY_KEY, id],
-    queryFn: () => areasApi.getById(id),
+    queryFn: ({ signal }) => areasApi.getById(id, signal),
     enabled: !!id,
   });
 }

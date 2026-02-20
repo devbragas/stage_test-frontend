@@ -3,9 +3,13 @@ import type { ProcessTreeStats } from "../types";
 
 type ProcessTreeStatsApiResponse = ProcessTreeStats | { data: ProcessTreeStats };
 
-export async function getProcessTreeStats(areaId: string): Promise<ProcessTreeStats> {
+export async function getProcessTreeStats(
+  areaId: string,
+  signal?: AbortSignal,
+): Promise<ProcessTreeStats> {
   const { data } = await api.get<ProcessTreeStatsApiResponse>(
     `/processes/area/${areaId}/stats`,
+    { signal },
   );
 
   if (data && typeof data === "object" && "data" in data && data.data) {
