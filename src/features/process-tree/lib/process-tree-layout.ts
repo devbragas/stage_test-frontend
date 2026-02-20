@@ -55,6 +55,8 @@ export function buildProcessTreeFlowElements(
       },
       data: {
         name: node.name,
+        description: node.description,
+        depth: depth + 1,
         priority: node.priority,
         status: node.status,
         type: node.type,

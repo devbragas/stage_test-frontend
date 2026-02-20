@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Network } from "lucide-react";
+import { useMemo, useState } from "react";
+import { AlertTriangle, Network } from "lucide-react";
 import { useAreas } from "@/src/features/areas";
 import type { Area } from "@/src/features/areas";
-import { ProcessTreeFlow } from "@/src/features/process-tree";
+import {
+  ProcessTreeFlow,
+  buildProcessTreeInsights,
+  useProcessTree,
+  useProcessTreeStats,
+} from "@/src/features/process-tree";
 import {
   Select,
   SelectContent,
@@ -19,6 +24,19 @@ export default function TreeViewPage() {
   const { data: areas = [], isLoading: isLoadingAreas } = useAreas();
   const [selectedAreaId, setSelectedAreaId] = useState<string>("");
   const effectiveSelectedAreaId = selectedAreaId || areas[0]?.id || null;
+  const selectedAreaName =
+    areas.find((area: Area) => area.id === effectiveSelectedAreaId)?.name || "";
+  const { data: treeData } = useProcessTree(effectiveSelectedAreaId);
+  const {
+    data: statsData,
+    isLoading: isLoadingStats,
+    isError: isErrorStats,
+  } = useProcessTreeStats(effectiveSelectedAreaId);
+
+  const insights = useMemo(
+    () => buildProcessTreeInsights(statsData, treeData),
+    [statsData, treeData],
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-8">
@@ -67,7 +85,68 @@ export default function TreeViewPage() {
             </div>
           </div>
 
-          <ProcessTreeFlow areaId={effectiveSelectedAreaId} />
+          <div className="flex justify-center gap-2">
+            <Card className="border-border/60">
+              <CardContent className="p-4 text-center">
+                <p className="text-xs text-muted-foreground">
+                  Profundidade máxima da cadeia
+                </p>
+                {isLoadingStats ? (
+                  <Skeleton className="mt-2 h-6 w-24" />
+                ) : (
+                  <p className="mt-1 text-sm font-semibold text-foreground">
+                    {insights.maxDepth}{" "}
+                    {insights.maxDepth === 1 ? "nível" : "níveis"}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/60">
+              <CardContent className="p-4 text-center">
+                <p className="text-xs text-muted-foreground">
+                  Processos críticos na cadeia
+                </p>
+                {isLoadingStats ? (
+                  <Skeleton className="mt-2 h-6 w-16" />
+                ) : (
+                  <p className="mt-1 text-sm font-semibold text-foreground">
+                    {insights.criticalProcesses}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/60">
+              <CardContent className="p-4 text-center">
+                <p className="text-xs text-muted-foreground">
+                  Gargalo identificado
+                </p>
+                {isLoadingStats ? (
+                  <Skeleton className="mt-2 h-6 w-28" />
+                ) : isErrorStats ? (
+                  <div className="mt-1 flex items-center gap-2 text-destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <span className="text-sm font-medium">
+                      Sem dados de gargalo
+                    </span>
+                  </div>
+                ) : (
+                  <p className="mt-1 text-sm font-semibold text-foreground">
+                    {insights.bottleneckLevel
+                      ? `Nível ${insights.bottleneckLevel}`
+                      : "Não identificado"}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <ProcessTreeFlow
+            key={effectiveSelectedAreaId ?? "no-area"}
+            areaId={effectiveSelectedAreaId}
+            areaName={selectedAreaName}
+          />
         </>
       )}
     </div>

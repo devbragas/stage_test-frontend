@@ -89,7 +89,7 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
   const isManual = data.type === "MANUAL";
 
   return (
-    <div className="min-w-[240px] rounded-xl border border-border bg-card shadow-sm">
+    <div className="min-w-[240px] cursor-pointer rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       <Handle
         type="target"
         position={Position.Top}
