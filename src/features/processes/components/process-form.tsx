@@ -121,7 +121,8 @@ export function ProcessForm({
             responsibles: formattedResponsibles,
             documentations: formattedDocumentations,
             ...(isEditMode && status ? { status } : {}),
-            ...(parentId && parentId !== "NONE" ? { parentId } : {}),
+            ...(parentId ? { parentId } : {}),
+            ...(isEditMode && !parentId ? { parentId: null } : {}),
           };
 
           onSubmit(formattedData);
@@ -286,10 +287,15 @@ export function ProcessForm({
                   <FormLabel>Processo Pai (Opcional)</FormLabel>
                   <Select
                     onValueChange={(value) =>
-                      field.onChange(value === "NONE" ? undefined : value)
+                      field.onChange(
+                        value === "NONE"
+                          ? isEditMode
+                            ? null
+                            : undefined
+                          : value,
+                      )
                     }
                     value={field.value ?? "NONE"}
-                    defaultValue={field.value}
                     disabled={!selectedAreaId}
                   >
                     <FormControl>

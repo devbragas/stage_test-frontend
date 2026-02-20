@@ -92,7 +92,14 @@ export function useDeleteProcess() {
       queryClient.invalidateQueries({ queryKey: PROCESSES_QUERY_KEY });
       toast.success("Processo deletado");
     },
-    onError: () => {
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 409) {
+        toast.error(
+          "Não é possível deletar este processo. Remova os subprocessos antes.",
+        );
+        return;
+      }
+
       toast.error("Erro ao deletar processo");
     },
   });

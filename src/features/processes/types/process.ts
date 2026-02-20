@@ -60,4 +60,6 @@ export interface CreateProcessDto {
   documentations?: string[];
 }
 
-export type UpdateProcessDto = Partial<CreateProcessDto>;
+export type UpdateProcessDto = Partial<Omit<CreateProcessDto, "parentId">> & {
+  parentId?: string | null;
+};

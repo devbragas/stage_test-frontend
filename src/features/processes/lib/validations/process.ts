@@ -27,7 +27,11 @@ export const createProcessSchema = z.object({
   documentations: z.array(documentationSchema).optional(),
 });
 
-export const updateProcessSchema = createProcessSchema.partial();
+export const updateProcessSchema = createProcessSchema.partial().extend({
+  parentId: z
+    .union([z.string().uuid("Processo pai inválido"), z.null()])
+    .optional(),
+});
 
 export type CreateProcessFormData = z.infer<typeof createProcessSchema>;
 export type UpdateProcessFormData = z.infer<typeof updateProcessSchema>;
