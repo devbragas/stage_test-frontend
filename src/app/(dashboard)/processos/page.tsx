@@ -308,10 +308,12 @@ export default function ProcessesPage() {
                           style={priorityBadgeStyles[process.priority]}
                         >
                           {process.priority === "MEDIA"
-                            ? "Média"
+                            ? "Prioridade Média"
                             : process.priority === "CRITICA"
-                              ? "Crítica"
-                              : process.priority}
+                              ? "Prioridade Crítica"
+                              : process.priority === "ALTA"
+                                ? "Prioridade Alta"
+                                : process.priority}
                         </Badge>
                         {process.area && (
                           <Badge
