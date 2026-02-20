@@ -17,6 +17,7 @@ O sistema permite organizar áreas, processos e subprocessos em uma estrutura hi
 - TanStack Query
 - Zustand
 - Axios
+- React Flow
 - Tailwind CSS
 - shadcn/ui
 
@@ -44,12 +45,16 @@ Nesse padrão de arquitetura, cada domínio possui sua própria responsabilidade
 
 ### Áreas
 
+No botão de Áreas, é possível cadastrar e visualizar os subprocesos de uma Área, além de:
+
 - CRUD completo
 - Filtro por nome
 - Validação de nome duplicado
 - Feedback visual com toast e Modals
 
 ### Processos
+
+O sistema conta com uma área de manejar os processos da empresa, com as seguintes funcionalidades:
 
 - CRUD completo
 - Hierarquia (processo pai / subprocesso)
@@ -58,6 +63,18 @@ Nesse padrão de arquitetura, cada domínio possui sua própria responsabilidade
 - Exibição de Status, Prioridade, Área associada e indicador de subprocesso
 
 - Gestão dinâmica de ferramentas, profissionais e documentações
+
+### TreeView
+
+Na parte de TreeView, o usuário consegue enxergar o esquema completo de cada área, mostrando os processos, subprocessos e permitindo algumas funcionalidades:
+
+- Visualização estruturada da cadeia completa de processos e seus respectivos níveis.
+- Identificação visual de tipo (Manual/Sistêmico), prioridade e status (Ativo/Inativo) diretamente no card.
+- Drag and drop para reorganização da hierarquia (alteração de processo pai de forma intuitiva).
+- Abertura de detalhes ao clicar no card, exibindo informações completas do processo.
+- Exclusão de nós que não possuem subprocessos, respeitando regras de integridade da cadeia.
+- Navegação fluida com zoom e pan para análise de estruturas mais complexas.
+- Atualização dinâmica da árvore após alterações, mantendo a visualização sempre consistente.
 
 ### UX
 
