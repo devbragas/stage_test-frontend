@@ -89,19 +89,19 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
   const isManual = data.type === "MANUAL";
 
   return (
-    <div className="min-w-[260px] max-w-[280px] overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_8px_24px_rgba(15,23,42,0.10)]">
+    <div className="min-w-[240px] rounded-xl border border-border bg-card shadow-sm">
       <Handle
         type="target"
         position={Position.Top}
         className="!h-2.5 !w-2.5 !border-2 !border-card !bg-slate-400"
       />
 
-      <div className="h-1 w-full" style={priority.accentStyle} />
+      <div className="h-1 rounded-t-xl" style={priority.accentStyle} />
 
-      <div className="space-y-3 px-3.5 py-3.5">
+      <div className="flex flex-col gap-4 p-4">
         <div className="flex items-start gap-3">
           <div
-            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border"
+            className="flex h-9 w-9 items-center justify-center rounded-md border"
             style={priority.iconStyle}
           >
             {isManual ? (
@@ -110,30 +110,31 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
               <Bot className="h-4 w-4" style={{ color: priority.iconColor }} />
             )}
           </div>
-          <div className="min-w-0">
-            <p className="line-clamp-2 text-sm font-semibold leading-5 text-foreground">
+
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold leading-tight text-foreground">
               {data.name}
-            </p>
-            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+            </span>
+            <span className="text-xs text-muted-foreground">
               {isManual ? "Manual" : "Sistêmico"}
-            </p>
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-0.5">
+        <div className="flex items-center justify-between">
           <Badge
             variant="outline"
-            className="rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+            className="text-xs font-medium"
             style={priority.badgeStyle}
           >
             {priority.label}
           </Badge>
 
           <div
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium ${
+            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
               isActive
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border-slate-200 bg-slate-100 text-slate-600"
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-slate-100 text-slate-600"
             }`}
           >
             <span

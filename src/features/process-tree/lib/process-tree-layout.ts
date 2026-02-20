@@ -1,6 +1,4 @@
-import {
-  type Edge,
-} from "@xyflow/react";
+import { type Edge } from "@xyflow/react";
 import {
   PROCESS_TREE_NODE_TYPE,
   type ProcessTreeFlowElements,
@@ -8,11 +6,14 @@ import {
   type ProcessTreeNode,
 } from "../types";
 
-const HORIZONTAL_STEP = 280;
+const HORIZONTAL_STEP = 160;
 const VERTICAL_STEP = 170;
 const ROOT_GAP_UNITS = 1;
 
-function getLeafSpan(node: ProcessTreeItem, spanById: Map<string, number>): number {
+function getLeafSpan(
+  node: ProcessTreeItem,
+  spanById: Map<string, number>,
+): number {
   if (!node.children.length) {
     spanById.set(node.id, 1);
     return 1;

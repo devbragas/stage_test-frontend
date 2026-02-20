@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Network } from "lucide-react";
 import { useAreas } from "@/src/features/areas";
 import type { Area } from "@/src/features/areas";
@@ -20,45 +20,13 @@ export default function TreeViewPage() {
   const [selectedAreaId, setSelectedAreaId] = useState<string>("");
   const effectiveSelectedAreaId = selectedAreaId || areas[0]?.id || null;
 
-  const selectedAreaName = useMemo(() => {
-    if (!effectiveSelectedAreaId) return "";
-    return (
-      areas.find((area: Area) => area.id === effectiveSelectedAreaId)?.name ??
-      ""
-    );
-  }, [areas, effectiveSelectedAreaId]);
-
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">TreeView</h1>
-          <p className="mt-1 text-muted-foreground">
-            Visão hierárquica dos processos e subprocessos
-          </p>
-        </div>
-
-        <div className="w-full max-w-xs">
-          {isLoadingAreas ? (
-            <Skeleton className="h-10 w-full" />
-          ) : (
-            <Select
-              value={effectiveSelectedAreaId ?? ""}
-              onValueChange={(value) => setSelectedAreaId(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma área" />
-              </SelectTrigger>
-              <SelectContent>
-                {areas.map((area: Area) => (
-                  <SelectItem key={area.id} value={area.id}>
-                    {area.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">TreeView</h1>
+        <p className="mt-1 text-muted-foreground">
+          Visão hierárquica dos processos e subprocessos
+        </p>
       </div>
 
       {!isLoadingAreas && areas.length === 0 ? (
@@ -72,12 +40,32 @@ export default function TreeViewPage() {
         </Card>
       ) : (
         <>
-          {selectedAreaName && (
-            <p className="text-sm text-muted-foreground">
-              Área selecionada:{" "}
-              <span className="font-medium text-foreground">{selectedAreaName}</span>
-            </p>
-          )}
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center">
+            <span className="text-sm text-muted-foreground">
+              Área selecionada:
+            </span>
+            <div className="w-full max-w-xs">
+              {isLoadingAreas ? (
+                <Skeleton className="h-10 w-full" />
+              ) : (
+                <Select
+                  value={effectiveSelectedAreaId ?? ""}
+                  onValueChange={(value) => setSelectedAreaId(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma área" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {areas.map((area: Area) => (
+                      <SelectItem key={area.id} value={area.id}>
+                        {area.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          </div>
 
           <ProcessTreeFlow areaId={effectiveSelectedAreaId} />
         </>
