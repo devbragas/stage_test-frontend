@@ -92,4 +92,4 @@ Por fim, rode a aplicação com o comando:
 npm run dev
 ```
 
-A aplicação estará disponível em: [http://localhost:3000](http://localhost:3000) .
+A tela do Dashboard principal da aplicação estará disponível em: [http://localhost:3000/dashboard](http://localhost:3000/dashboard) .

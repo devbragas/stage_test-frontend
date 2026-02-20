@@ -47,12 +47,15 @@ export function ProcessForm({
   onSubmit,
   loading,
 }: ProcessFormProps) {
+  const isEditMode = Boolean(process);
   const normalizedTools = (process?.tools || []).map((tool) => tool.trim());
 
   const normalizedResponsibles = (process?.responsibles || []).map(
     (responsible) => responsible.trim(),
   );
   const normalizedPriority = process?.priority || "MEDIA";
+  const normalizedStatus =
+    process?.status === "INACTIVE" ? "INACTIVE" : "ACTIVE";
 
   const normalizedDocumentations = (process?.documentations || []).map(
     (documentation) => documentation.trim(),
@@ -65,7 +68,7 @@ export function ProcessForm({
       description: process?.description || "",
       type: process?.type || "MANUAL",
       priority: normalizedPriority,
-      status: process?.status || "ATIVO",
+      status: normalizedStatus,
       areaId: process?.areaId || "",
       parentId: process?.parentId || undefined,
       tools: normalizedTools,
@@ -90,8 +93,14 @@ export function ProcessForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          const { parentId, responsibles, tools, documentations, ...rest } =
-            data;
+          const {
+            parentId,
+            responsibles,
+            tools,
+            documentations,
+            status,
+            ...rest
+          } = data;
           const formattedResponsibles = (responsibles || [])
             .map((responsible) =>
               typeof responsible === "string" ? responsible.trim() : "",
@@ -111,7 +120,9 @@ export function ProcessForm({
             tools: formattedTools,
             responsibles: formattedResponsibles,
             documentations: formattedDocumentations,
-            ...(parentId && parentId !== "NONE" ? { parentId } : {}),
+            ...(isEditMode && status ? { status } : {}),
+            ...(parentId ? { parentId } : {}),
+            ...(isEditMode && !parentId ? { parentId: null } : {}),
           };
 
           onSubmit(formattedData);
@@ -211,6 +222,33 @@ export function ProcessForm({
               />
             </div>
 
+            {isEditMode && (
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || "ACTIVE"}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="ACTIVE">Ativo</SelectItem>
+                        <SelectItem value="INACTIVE">Inativo</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -249,10 +287,15 @@ export function ProcessForm({
                   <FormLabel>Processo Pai (Opcional)</FormLabel>
                   <Select
                     onValueChange={(value) =>
-                      field.onChange(value === "NONE" ? undefined : value)
+                      field.onChange(
+                        value === "NONE"
+                          ? isEditMode
+                            ? null
+                            : undefined
+                          : value,
+                      )
                     }
                     value={field.value ?? "NONE"}
-                    defaultValue={field.value}
                     disabled={!selectedAreaId}
                   >
                     <FormControl>

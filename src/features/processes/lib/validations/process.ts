@@ -19,6 +19,7 @@ export const createProcessSchema = z.object({
     error: "Selecione o tipo do processo",
   }),
   priority: z.enum(["BAIXA", "MEDIA", "ALTA", "CRITICA"]).default("MEDIA"),
+  status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
   areaId: z.string().uuid("Área inválida"),
   parentId: z.string().uuid("Processo pai inválido").optional(),
   tools: z.array(toolSchema).optional(),
@@ -26,7 +27,11 @@ export const createProcessSchema = z.object({
   documentations: z.array(documentationSchema).optional(),
 });
 
-export const updateProcessSchema = createProcessSchema.partial();
+export const updateProcessSchema = createProcessSchema.partial().extend({
+  parentId: z
+    .union([z.string().uuid("Processo pai inválido"), z.null()])
+    .optional(),
+});
 
 export type CreateProcessFormData = z.infer<typeof createProcessSchema>;
 export type UpdateProcessFormData = z.infer<typeof updateProcessSchema>;

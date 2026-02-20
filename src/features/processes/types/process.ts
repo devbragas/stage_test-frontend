@@ -52,6 +52,7 @@ export interface CreateProcessDto {
   description?: string;
   type: ProcessType;
   priority: ProcessPriority;
+  status?: ProcessStatus;
   areaId: string;
   parentId?: string;
   tools?: string[];
@@ -59,4 +60,6 @@ export interface CreateProcessDto {
   documentations?: string[];
 }
 
-export type UpdateProcessDto = Partial<CreateProcessDto>;
+export type UpdateProcessDto = Partial<Omit<CreateProcessDto, "parentId">> & {
+  parentId?: string | null;
+};
