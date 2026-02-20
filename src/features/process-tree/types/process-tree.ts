@@ -18,6 +18,9 @@ export interface ProcessTreeNodeData extends Record<string, unknown> {
   priority: ProcessPriority;
   status: ProcessStatus;
   type: ProcessType;
+  isDropTarget?: boolean;
+  isDropForbidden?: boolean;
+  isDragging?: boolean;
 }
 
 export const PROCESS_TREE_NODE_TYPE = "processTreeNode";

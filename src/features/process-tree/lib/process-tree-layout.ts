@@ -61,7 +61,7 @@ export function buildProcessTreeFlowElements(
         status: node.status,
         type: node.type,
       },
-      draggable: false,
+      draggable: true,
     });
 
     let currentLeafStart = leafStart;

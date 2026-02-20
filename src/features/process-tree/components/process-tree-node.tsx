@@ -87,9 +87,20 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
   const priority = priorityBadgeStyle[data.priority];
   const isActive = data.status === "ACTIVE";
   const isManual = data.type === "MANUAL";
+  const isDropTarget = Boolean(data.isDropTarget);
+  const isDropForbidden = Boolean(data.isDropForbidden);
+  const isDragging = Boolean(data.isDragging);
 
   return (
-    <div className="w-[220px] max-w-[220px] cursor-pointer overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
+    <div
+      className={`w-[220px] max-w-[220px] cursor-pointer overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-md ${
+        isDropTarget
+          ? isDropForbidden
+            ? "border-destructive ring-2 ring-destructive/60"
+            : "border-emerald-500 ring-2 ring-emerald-500/60 shadow-md"
+          : "border-border"
+      } ${isDragging ? "opacity-75" : ""}`}
+    >
       <Handle
         type="target"
         position={Position.Top}
@@ -97,6 +108,18 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
       />
 
       <div className="h-1 rounded-t-xl" style={priority.accentStyle} />
+
+      {isDropTarget && (
+        <div
+          className={`px-4 py-1 text-[11px] font-semibold ${
+            isDropForbidden
+              ? "bg-destructive/10 text-destructive"
+              : "bg-emerald-50 text-emerald-700"
+          }`}
+        >
+          {isDropForbidden ? "Destino inválido" : "Solte para tornar pai"}
+        </div>
+      )}
 
       <div className="flex w-[220px] max-w-[220px] flex-col gap-4 p-4">
         <div className="flex items-start gap-3">
