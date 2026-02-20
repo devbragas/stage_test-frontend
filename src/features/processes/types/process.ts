@@ -52,6 +52,7 @@ export interface CreateProcessDto {
   description?: string;
   type: ProcessType;
   priority: ProcessPriority;
+  status?: ProcessStatus;
   areaId: string;
   parentId?: string;
   tools?: string[];

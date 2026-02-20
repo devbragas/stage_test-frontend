@@ -68,9 +68,17 @@ import type {
 import { useAreas } from "@/src/features/areas";
 
 const statusColors = {
+  ACTIVE: "bg-green-100 text-green-800",
+  INACTIVE: "bg-gray-200 text-gray-700",
   ATIVO: "bg-green-100 text-green-800",
-  EM_REVISAO: "bg-yellow-100 text-yellow-800",
-  DESCONTINUADO: "bg-red-100 text-red-800",
+  INATIVO: "bg-gray-200 text-gray-700",
+};
+
+const statusLabels = {
+  ACTIVE: "Ativo",
+  INACTIVE: "Inativo",
+  ATIVO: "Ativo",
+  INATIVO: "Inativo",
 };
 
 const priorityBadgeStyles = {
@@ -91,6 +99,19 @@ const priorityBadgeStyles = {
   },
   CRITICA: {
     backgroundColor: "#ffe4e6",
+    color: "#9f1239",
+    borderColor: "#fda4af",
+  },
+};
+
+const statusBadgesStyles = {
+  ACTIVE: {
+    backgroundColor: "#f59e0b",
+    color: "#000000",
+    borderColor: "#cf9413",
+  },
+  INACTIVE: {
+    backgroundColor: "#f59f0b26",
     color: "#9f1239",
     borderColor: "#fda4af",
   },
@@ -275,8 +296,12 @@ export default function ProcessesPage() {
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        <Badge className={statusColors[process.status]}>
-                          {process.status}
+                        <Badge
+                          variant="outline"
+                          style={statusBadgesStyles[process.status]}
+                          className={statusColors[process.status]}
+                        >
+                          {statusLabels[process.status] || process.status}
                         </Badge>
                         <Badge
                           variant="outline"

@@ -19,6 +19,7 @@ export const createProcessSchema = z.object({
     error: "Selecione o tipo do processo",
   }),
   priority: z.enum(["BAIXA", "MEDIA", "ALTA", "CRITICA"]).default("MEDIA"),
+  status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
   areaId: z.string().uuid("Área inválida"),
   parentId: z.string().uuid("Processo pai inválido").optional(),
   tools: z.array(toolSchema).optional(),

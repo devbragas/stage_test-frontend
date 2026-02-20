@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { processesApi } from "../services";
 import type { CreateProcessDto, UpdateProcessDto } from "../types";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 export const PROCESSES_QUERY_KEY = ["processes"];
 
@@ -70,6 +70,14 @@ export function useUpdateProcess() {
       toast.success("Processo atualizado!");
     },
     onError: (error: AxiosError) => {
+      if (error.response?.status === 409) {
+        toast.error(
+          "Não é possível inativar este processo. Inative ou remova os seus subprocessos antes de continuar.",
+        );
+        return;
+      }
+
+      toast.error("Erro ao atualizar processo");
       console.error("Erro ao atualizar processo", error.response?.data);
     },
   });
