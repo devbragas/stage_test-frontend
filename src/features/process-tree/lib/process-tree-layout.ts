@@ -6,7 +6,7 @@ import {
   type ProcessTreeNode,
 } from "../types";
 
-const HORIZONTAL_STEP = 160;
+const HORIZONTAL_STEP = 260;
 const VERTICAL_STEP = 170;
 const ROOT_GAP_UNITS = 1;
 

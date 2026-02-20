@@ -89,7 +89,7 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
   const isManual = data.type === "MANUAL";
 
   return (
-    <div className="min-w-[240px] cursor-pointer rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
+    <div className="w-[220px] max-w-[220px] cursor-pointer overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       <Handle
         type="target"
         position={Position.Top}
@@ -98,7 +98,7 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
 
       <div className="h-1 rounded-t-xl" style={priority.accentStyle} />
 
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex w-[220px] max-w-[220px] flex-col gap-4 p-4">
         <div className="flex items-start gap-3">
           <div
             className="flex h-9 w-9 items-center justify-center rounded-md border"
@@ -111,8 +111,8 @@ export function ProcessTreeNode({ data }: NodeProps<ProcessTreeNodeModel>) {
             )}
           </div>
 
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold leading-tight text-foreground">
+          <div className="min-w-0 flex flex-col">
+            <span className="break-words text-sm font-semibold leading-snug text-foreground">
               {data.name}
             </span>
             <span className="text-xs text-muted-foreground">
