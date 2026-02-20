@@ -10,10 +10,11 @@ import {
   type ReactFlowInstance,
 } from "@xyflow/react";
 import { toast } from "sonner";
-import { useDeleteProcess, useUpdateProcess } from "@/src/features/processes";
+import { useDeleteProcess } from "@/src/features/processes";
 import {
   PROCESS_TREE_QUERY_KEY,
   PROCESS_TREE_STATS_QUERY_KEY,
+  useReparentProcess,
   useProcessTree,
 } from "../hooks";
 import { buildProcessTreeFlowElements } from "../lib";
@@ -56,7 +57,7 @@ export function useProcessTreeFlowController(
 ): UseProcessTreeFlowControllerResult {
   const queryClient = useQueryClient();
   const deleteProcess = useDeleteProcess();
-  const updateProcess = useUpdateProcess();
+  const reparentProcess = useReparentProcess();
 
   const isDraggingRef = useRef(false);
   const reactFlowRef = useRef<ReactFlowInstance<ProcessTreeNodeModel> | null>(
@@ -143,6 +144,16 @@ export function useProcessTreeFlowController(
   );
 
   const refreshTreeQueries = () => {
+    if (areaId) {
+      queryClient.invalidateQueries({
+        queryKey: [...PROCESS_TREE_QUERY_KEY, areaId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...PROCESS_TREE_STATS_QUERY_KEY, areaId],
+      });
+      return;
+    }
+
     queryClient.invalidateQueries({ queryKey: PROCESS_TREE_QUERY_KEY });
     queryClient.invalidateQueries({ queryKey: PROCESS_TREE_STATS_QUERY_KEY });
   };
@@ -317,7 +328,7 @@ export function useProcessTreeFlowController(
     _event,
     draggedNode,
   ) => {
-    if (updateProcess.isPending) {
+    if (reparentProcess.isPending) {
       finishDragTracking();
       return;
     }
@@ -339,18 +350,19 @@ export function useProcessTreeFlowController(
       return;
     }
 
-    updateProcess.mutate(
+    if (!areaId) {
+      finishDragTracking();
+      return;
+    }
+
+    reparentProcess.mutate(
       {
-        id: draggedNode.id,
-        data: { parentId: nextParentId },
+        processId: draggedNode.id,
+        parentId: nextParentId,
+        areaId,
       },
       {
-        onSuccess: () => {
-          refreshTreeQueries();
-          finishDragTracking();
-        },
-        onError: () => {
-          refreshTreeQueries();
+        onSettled: () => {
           finishDragTracking();
         },
       },
@@ -412,7 +424,7 @@ export function useProcessTreeFlowController(
     onNodeDragStart,
     onNodeDrag,
     onNodeDragStop,
-    nodesDraggable: !updateProcess.isPending && !deleteProcess.isPending,
+    nodesDraggable: !reparentProcess.isPending && !deleteProcess.isPending,
     selectedNode,
     selectedNodeHasChildren,
     selectedNodeChildrenCount,
@@ -424,6 +436,6 @@ export function useProcessTreeFlowController(
     isRootDropPreview,
     dragHintText,
     deletePending: deleteProcess.isPending,
-    updatePending: updateProcess.isPending,
+    updatePending: reparentProcess.isPending,
   };
 }

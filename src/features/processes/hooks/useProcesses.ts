@@ -16,14 +16,14 @@ export function useProcesses(params?: {
 
   return useQuery({
     queryKey: [...PROCESSES_QUERY_KEY, { ...params, skip }],
-    queryFn: () => processesApi.getAll({ ...params, skip }),
+    queryFn: ({ signal }) => processesApi.getAll({ ...params, skip }, signal),
   });
 }
 
 export function useProcessesByArea(areaId: string | undefined) {
   return useQuery({
     queryKey: [...PROCESSES_QUERY_KEY, "area", areaId],
-    queryFn: () => processesApi.getByArea(areaId!),
+    queryFn: ({ signal }) => processesApi.getByArea(areaId!, signal),
     enabled: !!areaId,
   });
 }
@@ -31,7 +31,7 @@ export function useProcessesByArea(areaId: string | undefined) {
 export function useProcessTreeByArea(areaId: string | undefined) {
   return useQuery({
     queryKey: [...PROCESSES_QUERY_KEY, "tree", areaId],
-    queryFn: () => processesApi.getTreeByArea(areaId!),
+    queryFn: ({ signal }) => processesApi.getTreeByArea(areaId!, signal),
     enabled: !!areaId,
   });
 }
@@ -39,7 +39,7 @@ export function useProcessTreeByArea(areaId: string | undefined) {
 export function useProcess(id: string) {
   return useQuery({
     queryKey: [...PROCESSES_QUERY_KEY, id],
-    queryFn: () => processesApi.getById(id),
+    queryFn: ({ signal }) => processesApi.getById(id, signal),
     enabled: !!id,
   });
 }

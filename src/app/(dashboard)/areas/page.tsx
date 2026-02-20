@@ -52,6 +52,7 @@ import {
   UpdateAreaFormData,
 } from "@/src/features/areas";
 import { Input } from "@/src/shared/components/ui/input";
+import { useDebouncedValue } from "@/src/shared/hooks/use-debounced-value";
 
 export default function AreasPage() {
   const createArea = useCreateArea();
@@ -72,7 +73,10 @@ export default function AreasPage() {
     openDeleteDialog,
     closeDeleteDialog,
   } = useAreaStore();
-  const { data: areas, isLoading } = useAreas(search);
+  const debouncedSearch = useDebouncedValue(search, 400);
+  const normalizedSearch = debouncedSearch.trim();
+  const querySearch = normalizedSearch.length >= 2 ? normalizedSearch : undefined;
+  const { data: areas, isLoading } = useAreas(querySearch);
 
   const handleCreate = (data: CreateAreaFormData) => {
     createArea.mutate(data, {

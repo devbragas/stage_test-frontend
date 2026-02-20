@@ -3,9 +3,13 @@ import type { ProcessTreeItem } from "../types";
 
 type ProcessTreeApiResponse = ProcessTreeItem[] | { data: ProcessTreeItem[] };
 
-export async function getProcessTree(areaId: string): Promise<ProcessTreeItem[]> {
+export async function getProcessTree(
+  areaId: string,
+  signal?: AbortSignal,
+): Promise<ProcessTreeItem[]> {
   const { data } = await api.get<ProcessTreeApiResponse>(
     `/processes/area/${areaId}/tree`,
+    { signal },
   );
 
   if (Array.isArray(data)) {

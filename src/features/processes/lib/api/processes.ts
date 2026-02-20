@@ -12,7 +12,7 @@ export const processesApi = {
     areaId?: string;
     skip?: number;
     limit?: number;
-  }) => {
+  }, signal?: AbortSignal) => {
     const cleanParams: Record<string, unknown> = {};
 
     if (params?.search?.trim()) {
@@ -30,22 +30,27 @@ export const processesApi = {
 
     const { data } = await api.get<ProcessesResponse>("/processes", {
       params: cleanParams,
+      signal,
     });
     return data;
   },
 
-  getByArea: async (areaId: string) => {
-    const { data } = await api.get<Process[]>(`/processes/area/${areaId}`);
+  getByArea: async (areaId: string, signal?: AbortSignal) => {
+    const { data } = await api.get<Process[]>(`/processes/area/${areaId}`, {
+      signal,
+    });
     return data;
   },
 
-  getTreeByArea: async (areaId: string) => {
-    const { data } = await api.get<Process[]>(`/processes/area/${areaId}/tree`);
+  getTreeByArea: async (areaId: string, signal?: AbortSignal) => {
+    const { data } = await api.get<Process[]>(`/processes/area/${areaId}/tree`, {
+      signal,
+    });
     return data;
   },
 
-  getById: async (id: string) => {
-    const { data } = await api.get<Process>(`/processes/${id}`);
+  getById: async (id: string, signal?: AbortSignal) => {
+    const { data } = await api.get<Process>(`/processes/${id}`, { signal });
     return data;
   },
 
@@ -63,8 +68,10 @@ export const processesApi = {
     await api.delete(`/processes/${id}`);
   },
 
-  getStats: async (areaId: string) => {
-    const { data } = await api.get(`/processes/area/${areaId}/stats`);
+  getStats: async (areaId: string, signal?: AbortSignal) => {
+    const { data } = await api.get(`/processes/area/${areaId}/stats`, {
+      signal,
+    });
     return data;
   },
 };

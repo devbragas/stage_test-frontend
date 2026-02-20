@@ -66,6 +66,7 @@ import type {
   UpdateProcessFormData,
 } from "@/src/features/processes";
 import { useAreas } from "@/src/features/areas";
+import { useDebouncedValue } from "@/src/shared/hooks/use-debounced-value";
 
 const statusColors = {
   ACTIVE: "bg-green-100 text-green-800",
@@ -166,8 +167,12 @@ export default function ProcessesPage() {
     closeDeleteDialog,
   } = useProcessStore();
 
+  const debouncedSearch = useDebouncedValue(search, 400);
+  const normalizedSearch = debouncedSearch.trim();
+  const querySearch = normalizedSearch.length >= 2 ? normalizedSearch : undefined;
+
   const { data: response, isLoading } = useProcesses({
-    search,
+    search: querySearch,
     areaId: selectedAreaId || undefined,
     page,
     limit,

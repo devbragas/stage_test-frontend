@@ -23,14 +23,23 @@ export interface DashboardStats extends DashboardProcessStatsResponse {
 
 const DASHBOARD_STATS_QUERY_KEY = ["dashboard", "stats"];
 
-async function fetchAllProcesses(): Promise<Process[]> {
+function isCanceledRequest(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "ERR_CANCELED"
+  );
+}
+
+async function fetchAllProcesses(signal?: AbortSignal): Promise<Process[]> {
   const allProcesses: Process[] = [];
   const limit = 100;
   let skip = 0;
   let hasMore = true;
 
   while (hasMore) {
-    const response = await processesApi.getAll({ skip, limit });
+    const response = await processesApi.getAll({ skip, limit }, signal);
     allProcesses.push(...response.data);
 
     if (response.meta.hasMore) {
@@ -97,14 +106,21 @@ function calculatePriorityStats(processes: Process[]) {
 export function useDashboardStats() {
   return useQuery({
     queryKey: DASHBOARD_STATS_QUERY_KEY,
-    queryFn: async (): Promise<DashboardStats> => {
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+    queryFn: async ({ signal }): Promise<DashboardStats> => {
       const [processes, areas, processStats] = await Promise.all([
-        fetchAllProcesses(),
-        areasApi.getAll() as Promise<Area[]>,
+        fetchAllProcesses(signal),
+        areasApi.getAll(undefined, signal) as Promise<Area[]>,
         api
-          .get<DashboardProcessStatsResponse>("/processes/stats")
+          .get<DashboardProcessStatsResponse>("/processes/stats", { signal })
           .then((response) => response.data)
-          .catch(() => null),
+          .catch((error) => {
+            if (isCanceledRequest(error)) {
+              throw error;
+            }
+            return null;
+          }),
       ]);
 
       const fallbackProcessStats = calculateStatsFromProcesses(processes);

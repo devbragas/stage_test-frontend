@@ -2,15 +2,16 @@ import { api } from "../../../lib/client";
 import type { Area, CreateAreaDto, UpdateAreaDto } from "../types";
 
 export const areasApi = {
-  getAll: async (search?: string) => {
+  getAll: async (search?: string, signal?: AbortSignal) => {
     const { data } = await api.get("/areas", {
       params: { search },
+      signal,
     });
     return data;
   },
 
-  getById: async (id: string) => {
-    const { data } = await api.get<Area>(`/areas/${id}`);
+  getById: async (id: string, signal?: AbortSignal) => {
+    const { data } = await api.get<Area>(`/areas/${id}`, { signal });
     return data;
   },
 

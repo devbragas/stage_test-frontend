@@ -7,9 +7,9 @@ export const PROCESS_TREE_STATS_QUERY_KEY = ["process-tree-stats"];
 export function useProcessTreeStats(areaId: string | null | undefined) {
   return useQuery({
     queryKey: [...PROCESS_TREE_STATS_QUERY_KEY, areaId],
-    queryFn: async (): Promise<ProcessTreeStats> => {
+    queryFn: async ({ signal }): Promise<ProcessTreeStats> => {
       if (!areaId) return {};
-      return getProcessTreeStats(areaId);
+      return getProcessTreeStats(areaId, signal);
     },
     enabled: Boolean(areaId),
   });
